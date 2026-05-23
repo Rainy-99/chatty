@@ -1,54 +1,55 @@
 # ✦ Chatty — AI Companion App
 
-A warm, modern AI chat companion built with **Expo SDK 54** and powered by **Google Gemini 2.0 Flash**.
+A warm, modern AI chat companion built with **Expo SDK 54** and powered by **Groq Llama 3.3 70b**.
 
 ---
 
 ## Quick Start
 
-### 1. Unzip and install
+### 1. Clone and install
 
 ```bash
-unzip chatty.zip
+git clone <repo-url> chatty
 cd chatty
-npm install
+pnpm install
 ```
 
-### 2. Add your Gemini API key
+### 2. Add your Groq API key
 
 ```bash
-cp .env.example .env
+cp .env
 ```
 
-Open `.env` and replace the placeholder:
+Open `.env` and add your Groq API key:
 
 ```
-EXPO_PUBLIC_GEMINI_API_KEY=your_actual_key_here
+EXPO_PUBLIC_GEMINI_API_KEY=your_groq_api_key_here
 ```
 
-> You can also skip this step and enter your key directly inside the app under **Settings → Gemini API Key**.
+> **Important**: API key is loaded from `.env` only. Restart the app with `pnpm start -c` after adding the key.
 
-### 3. Start
+### 3. Start development
 
 ```bash
-npx expo start
+pnpm start
 ```
 
-Scan the QR code with **Expo Go** on your phone.
+Scan the QR code with **Expo Go**:
 
-- iOS: download **Expo Go** from the App Store
-- Android: download **Expo Go** from the Play Store
+- **iOS**: Download **Expo Go** from the App Store
+- **Android**: Download **Expo Go** from the Play Store
 
 ---
 
-## Getting a Gemini API Key
+## Getting a Groq API Key
 
-1. Go to **[aistudio.google.com](https://aistudio.google.com)**
-2. Sign in with your Google account
-3. Click **Get API key** → **Create API key**
-4. Copy the key — paste it into `.env` or the Settings tab in the app
+1. Go to **[console.groq.com](https://console.groq.com)**
+2. Sign up or log in with your account
+3. Navigate to **API Keys** → **Create New API Key**
+4. Copy the key and paste it into `.env` as `EXPO_PUBLIC_GROQ_API_KEY`
+5. Restart the app: `pnpm start -c`
 
-The free tier is generous for personal use and requires no billing setup.
+The free tier provides **1,000 requests per day** with no credit card required.
 
 ---
 
@@ -76,9 +77,9 @@ chatty/
 │   ├── config.js                # AI user objects, model name, default personality
 │   └── theme.js                 # Colors, typography, spacing, shadows, timing
 ├── services/
-│   ├── gemini.js                # Gemini REST API — send message
+│   ├── gemini.js                # Groq REST API (OpenAI-compatible) — send message
 │   ├── contextManager.js        # Trims message history to MAX_CONTEXT_MESSAGES=20
-│   ├── memoryManager.js         # Extracts long-term memory via Gemini
+│   ├── memoryManager.js         # Extracts long-term memory via Groq
 │   └── promptBuilder.js         # Assembles system prompt (personality + memory)
 ├── storage/
 │   ├── chatStorage.js           # AsyncStorage for messages, sessions, settings
@@ -95,33 +96,32 @@ chatty/
 
 ## Features
 
-| Feature | Details |
-|---|---|
-| **Chat** | Full conversation with Gemini 2.0 Flash via direct REST |
-| **Markdown** | AI responses render bold, italic, code, lists, blockquotes |
-| **Short-term memory** | Last 20 messages sent as context every turn |
-| **Long-term memory** | Gemini extracts profile/preferences/facts every 6 turns |
-| **Memory toggle** | Enable/disable in Settings — takes effect immediately |
-| **Personality editor** | Edit the AI's system prompt from Settings |
-| **History** | Sessions auto-saved, grouped by date, searchable |
-| **Persistence** | All data stored locally via AsyncStorage — no server |
-| **Animations** | Reanimated 3 — bubble entrance, typing dots, tab icons, spring buttons |
+| Feature                | Details                                                                |
+| ---------------------- | ---------------------------------------------------------------------- |
+| **Chat**               | Full conversation with Groq Llama 3.3 70b via REST API                 |
+| **Markdown**           | AI responses render bold, italic, code, lists, blockquotes             |
+| **Short-term memory**  | Last 20 messages sent as context every turn                            |
+| **Long-term memory**   | Groq extracts profile/preferences/facts every 6 turns                  |
+| **Memory toggle**      | Enable/disable in Settings — takes effect immediately                  |
+| **Personality editor** | Edit the AI's system prompt from Settings                              |
+| **History**            | Sessions auto-saved, grouped by date, searchable                       |
+| **Persistence**        | All data stored locally via AsyncStorage — no server                   |
+| **Animations**         | Reanimated 3 — bubble entrance, typing dots, tab icons, spring buttons |
 
 ---
 
 ## Tech Stack
 
-| Layer | Package |
-|---|---|
-| Framework | Expo SDK 54 |
-| Navigation | Expo Router 4 |
-| Chat UI | react-native-gifted-chat |
-| State | Zustand 5 |
-| Storage | @react-native-async-storage/async-storage |
-| Animations | react-native-reanimated 3 |
-| Markdown | react-native-markdown-display |
-| Icons | @expo/vector-icons (Ionicons) |
-| AI | Google Gemini 2.0 Flash (REST — no SDK) |
+| Layer      | Package                                         |
+| ---------- | ----------------------------------------------- |
+| Framework  | Expo SDK 54                                     |
+| Navigation | Expo Router 4                                   |
+| State      | Zustand 5                                       |
+| Storage    | @react-native-async-storage/async-storage       |
+| Animations | react-native-reanimated 3                       |
+| Markdown   | react-native-markdown-display                   |
+| Icons      | @expo/vector-icons (Ionicons)                   |
+| AI         | Groq Llama 3.3 70b (OpenAI-compatible REST API) |
 
 ---
 
@@ -142,15 +142,19 @@ chatty/
 ## Troubleshooting
 
 **"Metro bundler" error on start**
+
 ```bash
-npx expo start --clear
+pnpm start -c
 ```
 
 **App shows "API Key Missing"**
-Enter your Gemini key in the app under **Settings → Gemini API Key**, or add it to `.env` and restart.
+Add your Groq API key to `.env` as `EXPO_PUBLIC_GEMINI_API_KEY` and restart with `pnpm start -c`.
 
-**Gemini returns an error**
-Check your key is valid at [aistudio.google.com](https://aistudio.google.com). Free tier keys work immediately.
+**Groq returns an error**
+
+- Check your API key is valid at [console.groq.com](https://console.groq.com/keys)
+- Verify you haven't exceeded the free tier rate limit (1,000 req/day)
+- Rate limits reset daily. Wait a moment and try again.
 
 **Expo Go shows a red screen**
-Make sure you ran `npm install` first. If the error mentions Reanimated, run `npx expo start --clear` to reset the Metro cache.
+Make sure you ran `pnpm install` first. If the error mentions Reanimated, run `pnpm start -c` to reset the Metro cache.
